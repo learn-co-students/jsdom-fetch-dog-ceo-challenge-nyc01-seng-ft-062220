@@ -71,6 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
         dogBreedsUl.appendChild(frag)
     }
 
+    
     getDogImages();
     getDogBreeds();
 })
