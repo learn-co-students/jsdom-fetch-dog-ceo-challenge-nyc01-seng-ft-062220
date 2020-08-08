@@ -2,12 +2,16 @@
 
 document.addEventListener("DOMContentLoaded", () => {
 
+    let dogBreedsObj = {};
+
     const getDogImages = async () => {
         const imgUrl = "https://dog.ceo/api/breeds/image/random/4"
 
+        console.log("await starts")
         let response = await fetch(imgUrl);
         let data = await response.json();
-        let images = await data.message;
+        console.log("await ends")
+        let images = data.message
 
         renderDogImages(images);
     }
@@ -37,29 +41,25 @@ document.addEventListener("DOMContentLoaded", () => {
     const getDogBreeds = async () => {
         const breedUrl = "https://dog.ceo/api/breeds/list/all"
 
+        console.log("await starts")
         let response = await fetch(breedUrl);
-        let data = await response.json();;
-        let breeds = await data.message
+        let data = await response.json();
+        let breeds = data.message;
+        console.log("await ends")
 
-        renderDogBreeds(breeds);
+        dogBreedsObj = breeds;
+
+
+        //renderDogBreeds();
     }
 
-    const renderDogBreeds = (breedsObj) => {
-
-        //console.log(breedsObj)
-
-        for (const breed in breedsObj) {
-
+    const renderDogBreeds = (dogBreedsObj) => {
+        //? does this need to an async iterator 'for async'?
+        for (const breed of dogBreedsObj) {
             renderDogBreed(breed);
-            // TODO - build simple algo to extract all breeds and types.
-            // if (breedsObj[breed].length >= 1) {
-            //     breedsObj[breed].forEach(nestedBreed => console.log)
-            // } else {
-            //     console.log(`${breed}`)
-            // }
+            }
         }
-    } 
-    
+        
     const dogBreedsUl = document.querySelector("#dog-breeds");
 
     const renderDogBreed = (breed) => {
@@ -106,12 +106,71 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Challenge 4
 
+    const breedDropdown = document.querySelector("#breed-dropdown");
+
+    const onChangeHandler = () => {
+        
+        breedDropdown.addEventListener("change", e => {
+            if (e.target.value === "all"){
+                    console.log("success")
+                    console.log(dogBreedsObj)
+                    clearRenderedContent();
+                    renderDogBreeds(Object.keys(dogBreedsObj))
+            } else {
+                    let filteredByLetter = Object.keys(dogBreedsObj).filter(breed => breed[0] === e.target.value);
+                    clearRenderedContent();
+                    renderDogBreeds(filteredByLetter);
+            }            
+
+
+            //console.log(filteredByLetter);
+            //debugger; 
+
+
+
+            // for (const breed in dogBreedsObj) {
+            //     const breedLetter = breed[0]
+            //     console.log(breedLetter)
+            //     switch(breedLetter) {
+            //         case "a":
+            //             console.log("A CASE");
+            //             renderDogBreed(breed);
+            //         default:
+            //             console.log("DEFAULT")
+            //             //renderDogBreed(breed);
+            //             break;
+            //     }
+            // }
+
+
+            // switch (e.target.value) {
+            //     case "a":
+
+            //         break;
+            //     case "b":
+
+            //         break;
+            //     case "c":
+
+            //         break;
+            //     case "d":
+
+            //         break;
+            // }
+
+        })
+    }
+
+    const clearRenderedContent = () => {
+        debugger;
+        dogBreedsUl.querySelectorAll('li').forEach(ul => ul.remove());
+    }
     
 
     getDogImages();
     getDogBreeds();
     clickHandler();
-
+    onChangeHandler();
 })
 
 
