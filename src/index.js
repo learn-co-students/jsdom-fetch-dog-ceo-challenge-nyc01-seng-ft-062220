@@ -1,4 +1,4 @@
-console.log('%c HI', 'color: firebrick')
+// console.log('%c HI', 'color: firebrick')
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -7,10 +7,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let response = await fetch(imgUrl);
         let data = await response.json();
-        let images = await data.message
+        let images = await data.message;
+
         renderDogImages(images);
     }
 
+    // TODO-- Refactor this to accept a callback function on line 16 as practice as theoretical helper function;
     const renderDogImages = (images) => {
         images.forEach(image => {renderDogImage(image)})
     }
@@ -30,15 +32,46 @@ document.addEventListener("DOMContentLoaded", () => {
         dogImageCol.appendChild(img)
 
         dogImagesContainer.appendChild(frag)
-        console.log(dogImagesContainer);
     }
 
+    const getDogBreeds = async () => {
+        const breedUrl = "https://dog.ceo/api/breeds/list/all"
 
+        let response = await fetch(breedUrl);
+        let data = await response.json();;
+        let breeds = await data.message
 
+        renderDogBreeds(breeds);
+    }
 
+    const renderDogBreeds = (breedsObj) => {
 
+        //console.log(breedsObj)
 
+        for (const breed in breedsObj) {
+
+            renderDogBreed(breed);
+            // TODO - build simple algo to extract all breeds and types.
+            // if (breedsObj[breed].length >= 1) {
+            //     breedsObj[breed].forEach(nestedBreed => console.log)
+            // } else {
+            //     console.log(`${breed}`)
+            // }
+        }
+    } 
+    
+    const dogBreedsUl = document.querySelector("#dog-breeds");
+
+    const renderDogBreed = (breed) => {
+        const frag = document.createDocumentFragment();
+        const li = document.createElement("li");
+        li.textContent = breed;
+        frag.appendChild(li);
+
+        dogBreedsUl.appendChild(frag)
+    }
 
     getDogImages();
+    getDogBreeds();
 })
 
